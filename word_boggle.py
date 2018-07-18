@@ -18,6 +18,7 @@ def inTrie(trie, word):
 
 
 # adjacency list
+# TODO: this assumes a 3x3 grid. need to generalize for any size
 # 0 1 2
 # 3 4 5
 # 6 7 8
@@ -33,23 +34,36 @@ adjacencies = [
 	[4, 5, 7]
 ]
 
-T = 1
-dictLen = 4
-dictionary = ['GEEKS', 'FOR', 'QUIZ', 'GO']
-w = 3
-h = 3
-boggleValues = "G I Z U E K Q S E"
-TheGrid = boggleValues.split()
+# read in input (assumes well-formed input)
+T = int(input())
+for i in range(T):
+	dictLen = int(input())
+	dictionary = input().split()
+	dims = input().split()
+	w = int(dims[0])
+	h = int(dims[1])
+	boggleValues = input()
+	TheGrid = boggleValues.split()
 
-# using nested dicts for the trie
-TheTrie = {}
+	# T = 1
+	# dictLen = 4
+	# dictionary = ['GEEKS', 'FOR', 'QUIZ', 'GO']
+	# w = 3
+	# h = 3
+	# boggleValues = "G I Z U E K Q S E"
+	# TheGrid = boggleValues.split()
 
-# this will be the max depth of the trie
-maxWordLen = max(len(word) for word in dictionary)
+	# using nested dicts for the trie
+	TheTrie = {}
 
-# build the trie
-for pos,letter in enumerate(TheGrid):
-	buildTrie(TheTrie, 0, pos, [], TheGrid, maxWordLen)
+	# this will be the max depth of the trie
+	maxWordLen = max(len(word) for word in dictionary)
 
-# quick test
-print(inTrie(TheTrie, "GEEKY"))
+	# build the trie
+	for pos,letter in enumerate(TheGrid):
+		buildTrie(TheTrie, 0, pos, [], TheGrid, maxWordLen)
+
+	for word in dictionary:
+		if inTrie(TheTrie, word):
+			print("{} ".format(word), end='')
+	print('')
