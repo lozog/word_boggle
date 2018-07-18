@@ -5,13 +5,16 @@ def buildTrie(node, depth, pos, visited, TheGrid, maxDepth):
 		return
 	visited.append(pos)
 	letter = TheGrid[pos]
-	node[letter] = {}
+	if not letter in node:
+		node[letter] = []
+	node[letter].append({})
 	depth += 1
 	if (depth > maxDepth):
 		return
 	for neighbour in adjacencies[pos]:
-		# TODO: what if 2 neighbours are the same letter?
-		buildTrie(node[letter], depth, neighbour, copy(visited), TheGrid, maxDepth)
+		# last element in node is the dict we just appended
+		# thus, index with -1
+		buildTrie(node[letter][-1], depth, neighbour, copy(visited), TheGrid, maxDepth)
 
 def inTrie(trie, word):
 	if word[0] not in trie:
@@ -19,7 +22,13 @@ def inTrie(trie, word):
 
 	if len(word) == 1:
 		return True
-	return inTrie(trie[word[0]], word[1:])
+
+	canMakeWord = False
+	for nextLetter in trie[word[0]]:
+		canMakeWord = inTrie(nextLetter, word[1:])
+		if canMakeWord:
+			break
+	return canMakeWord
 
 def buildAdjacencies(w, h):
 	adjacencies = []
