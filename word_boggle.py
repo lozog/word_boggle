@@ -6,6 +6,7 @@ def buildTrie(node, depth, pos, visited, TheGrid, maxDepth):
 	if (depth > maxDepth):
 		return
 	for neighbour in adjacencies[pos]:
+		# TODO: what if 2 neighbours are the same letter?
 		buildTrie(node[letter], depth, neighbour, visited, TheGrid, maxDepth)
 
 def inTrie(trie, word):
@@ -16,23 +17,29 @@ def inTrie(trie, word):
 		return True
 	return inTrie(trie[word[0]], word[1:])
 
-
-# adjacency list
-# TODO: this assumes a 3x3 grid. need to generalize for any size
-# 0 1 2
-# 3 4 5
-# 6 7 8
-adjacencies = [
-	[1, 3, 4],
-	[0, 2, 3, 4, 5],
-	[1, 4, 5],
-	[0, 1, 4, 6, 7],
-	[0, 1, 2, 3, 5, 6, 7, 8],
-	[1, 2, 4, 7, 8],
-	[3, 4, 7],
-	[3, 4, 5, 6, 8],
-	[4, 5, 7]
-]
+def buildAdjacencies(w, h):
+	adjacencies = []
+	for row in range(h):
+		for col in range(w):
+			pos = row*w + col
+			adjacencies.append([])
+			if col > 0: # if not in left col
+				adjacencies[pos].append(row*w + (col-1))
+				if row > 0: # up left
+					adjacencies[pos].append((row-1)*w + (col-1))
+				if row < h-1: # down left
+					adjacencies[pos].append((row+1)*w + (col-1))
+			if col < w-1: # if not in right col
+				adjacencies[pos].append(row*w + (col+1))
+				if row > 0: # up right
+					adjacencies[pos].append((row-1)*w + (col+1))
+				if row < h-1: # down right
+					adjacencies[pos].append((row+1)*w + (col+1))
+			if row > 0: # if not in top row
+				adjacencies[pos].append((row-1)*w + col)
+			if row < h-1: # if not in bottom row
+				adjacencies[pos].append((row+1)*w + col)
+	return adjacencies
 
 # read in input (assumes well-formed input)
 T = int(input())
@@ -43,15 +50,10 @@ for i in range(T):
 	w = int(dims[0])
 	h = int(dims[1])
 	boggleValues = input()
-	TheGrid = boggleValues.split()
 
-	# T = 1
-	# dictLen = 4
-	# dictionary = ['GEEKS', 'FOR', 'QUIZ', 'GO']
-	# w = 3
-	# h = 3
-	# boggleValues = "G I Z U E K Q S E"
-	# TheGrid = boggleValues.split()
+	TheGrid = boggleValues.split()
+	print(TheGrid)
+	adjacencies = buildAdjacencies(w, h)
 
 	# using nested dicts for the trie
 	TheTrie = {}
@@ -63,6 +65,7 @@ for i in range(T):
 	for pos,letter in enumerate(TheGrid):
 		buildTrie(TheTrie, 0, pos, [], TheGrid, maxWordLen)
 
+	# print words from dictionary that can be formed from the grid
 	for word in dictionary:
 		if inTrie(TheTrie, word):
 			print("{} ".format(word), end='')
