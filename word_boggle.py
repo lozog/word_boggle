@@ -1,4 +1,8 @@
+from copy import copy
+
 def buildTrie(node, depth, pos, visited, TheGrid, maxDepth):
+	if (pos in visited):
+		return
 	visited.append(pos)
 	letter = TheGrid[pos]
 	node[letter] = {}
@@ -7,7 +11,7 @@ def buildTrie(node, depth, pos, visited, TheGrid, maxDepth):
 		return
 	for neighbour in adjacencies[pos]:
 		# TODO: what if 2 neighbours are the same letter?
-		buildTrie(node[letter], depth, neighbour, visited, TheGrid, maxDepth)
+		buildTrie(node[letter], depth, neighbour, copy(visited), TheGrid, maxDepth)
 
 def inTrie(trie, word):
 	if word[0] not in trie:
