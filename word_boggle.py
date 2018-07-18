@@ -60,13 +60,15 @@ for i in range(T):
 	dictLen = int(input())
 	dictionary = input().split()
 	dims = input().split()
-	w = int(dims[0])
-	h = int(dims[1])
+	h = int(dims[0])
+	w = int(dims[1])
 	boggleValues = input()
 
 	TheGrid = boggleValues.split()
-	print(TheGrid)
+	# print(TheGrid)
 	adjacencies = buildAdjacencies(w, h)
+	# for adj in adjacencies:
+		# print(adj)
 
 	# using nested dicts for the trie
 	TheTrie = {}
