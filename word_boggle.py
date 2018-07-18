@@ -79,9 +79,17 @@ for i in range(T):
 	# build the trie
 	for pos,letter in enumerate(TheGrid):
 		buildTrie(TheTrie, 0, pos, [], TheGrid, maxWordLen)
+	# for child in TheTrie['d']:
+	# 	print(child)
+	# 	print('')
 
 	# print words from dictionary that can be formed from the grid
+	foundWords = []
 	for word in dictionary:
-		if inTrie(TheTrie, word):
-			print("{} ".format(word), end='')
-	print('')
+		if inTrie(TheTrie, word) and word not in foundWords:
+			foundWords.append(word)
+	if len(foundWords) > 0:
+		foundWords.sort()
+		print(' '.join(foundWords))
+	else:
+		print("-1")
